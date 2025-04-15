@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.Products;
+using FluentAssertions;
 
 namespace Domain.Test.Unit.Entities.Products;
 
@@ -21,8 +22,8 @@ public class ProductTest
         Product newProduct = new(name, unitPrice);
 
         //assert
-        Assert.Equal(name, newProduct.Name);
-        Assert.Equal(unitPrice, newProduct.UnitPrice);
+        newProduct.Name.Should().Be(name);
+        newProduct.UnitPrice.Should().Be(unitPrice);
     }
 
     [Fact]
@@ -38,7 +39,7 @@ public class ProductTest
         newProduct.Update(name, unitPrice);
 
         //assert
-        Assert.Equal(name, newProduct.Name);
-        Assert.Equal(unitPrice, newProduct.UnitPrice);
+        newProduct.Name.Should().Be(name);
+        newProduct.UnitPrice.Should().Be(unitPrice);
     }
 }
