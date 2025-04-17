@@ -4,11 +4,11 @@ namespace Domain.Test.Unit.Entities.Products;
 
 public class ProductBuilder
 {
-    int id = 50;
     string? name = "name";
     decimal unitPrice = 250;
 
     public Product Build() => new(name, unitPrice);
+    public Product BuildWithId(int id) => new(name, unitPrice) { Id = id };
 
     public ProductBuilder SetName(string name)
     {
@@ -21,4 +21,5 @@ public class ProductBuilder
         this.unitPrice = unitPrice;
         return this;
     }
+
 }

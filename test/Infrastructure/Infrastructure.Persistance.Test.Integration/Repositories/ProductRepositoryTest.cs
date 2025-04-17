@@ -21,25 +21,25 @@ public class ProductRepositoryTest : IClassFixture<SandBoxDatabaseSetupFixture>
 
     private async Task<Product?> AddProductAsync()
     {
-        var newProdut = _productBuilder.Build();
+        var newProduct = _productBuilder.Build();
 
-        await _productRepository.AddAsync(newProdut);
+        await _productRepository.AddAsync(newProduct);
         await _productRepository.SaveChangesAsync();
 
-        return newProdut;
+        return newProduct;
     }
     [Fact]
     public async Task Should_AddNewProduct()
     {
         //arrange
-        var newProdut = _productBuilder.Build();
+        var newProduct = _productBuilder.Build();
 
         //act
-        await _productRepository.AddAsync(newProdut);
+        await _productRepository.AddAsync(newProduct);
         await _productRepository.SaveChangesAsync();
 
         //assert
-        newProdut.Id.Should().BeGreaterThan(0);
+        newProduct.Id.Should().BeGreaterThan(0);
     }
 
     [Fact]
@@ -56,7 +56,7 @@ public class ProductRepositoryTest : IClassFixture<SandBoxDatabaseSetupFixture>
         result.Id.Should().Be(newProduct.Id);
     }
     [Fact]
-    public async Task Should_GetProductByIdNotFoundRecordRetrunNull()
+    public async Task Should_GetProductByIdNotFoundRecordReturnNull()
     {
         //act
         var result = await _productRepository.GetByIdAsync(0);
