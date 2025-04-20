@@ -20,6 +20,22 @@ public class OperationResultTest
 
 
     [Fact]
+    public void Should_SuccessOperationSetData()
+    {
+        var data = new { Id = 1 };
+        //act
+        OperationResult operationResult = OperationResult.Success(data);
+
+        //assert
+
+        operationResult.IsSuccess.Should().BeTrue();
+        operationResult.Messages.Should().BeEmpty();
+        operationResult.Data.Should().NotBeNull();
+        operationResult.Data.Should().Be(data);
+    }
+
+
+    [Fact]
     public void Should_FailureOperation()
     {
         //arrange

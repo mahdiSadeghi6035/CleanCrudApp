@@ -1,33 +1,62 @@
 using Scalar.AspNetCore;
 using Infrastructure.Persistance;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc;
+using Application;
+using Newtonsoft;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace Api;
 
-
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
-
-builder.Services.RegisterPersistance(builder.Configuration);
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+public class Program
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference(options =>
+    private static void Main(string[] args)
     {
-        options.Title = "Clean Base";
-        options.Theme = ScalarTheme.BluePlanet;
-        options.DefaultHttpClient = new(ScalarTarget.CSharp, ScalarClient.HttpClient);
-        options.CustomCss = "";
-        options.ShowSidebar = true;
-    });
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddApiVersioning(config =>
+        {
+            config.DefaultApiVersion = new ApiVersion(1, 0);
+            config.AssumeDefaultVersionWhenUnspecified = true;
+            config.ReportApiVersions = true;
+            config.ApiVersionReader = new UrlSegmentApiVersionReader();
+        });
+
+        builder.Services.AddVersionedApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+        });
+
+
+        builder.Services.RegisterPersistance(builder.Configuration);
+        builder.Services.RegisterApplication();
+
+        builder.Services.AddControllers().AddNewtonsoftJson();
+        builder.Services.AddOpenApi();
+
+
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+            app.MapScalarApiReference(options =>
+            {
+                options.Title = "Clean Base";
+                options.Theme = ScalarTheme.BluePlanet;
+                options.DefaultHttpClient = new(ScalarTarget.CSharp, ScalarClient.HttpClient);
+                options.CustomCss = "";
+                options.ShowSidebar = true;
+            });
+        }
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.Run();
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

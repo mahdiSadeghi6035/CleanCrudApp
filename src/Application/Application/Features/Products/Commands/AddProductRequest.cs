@@ -1,4 +1,5 @@
-﻿using Application.Commons.Responses;
+﻿using Application.Commons.DTo;
+using Application.Commons.Responses;
 using Application.Contracts.Infrastructure.Repositories;
 using Application.DTo.Products.Validations;
 using Domain.Entities.Products;
@@ -33,7 +34,7 @@ public class AddProductHandler : IRequestHandler<AddProductRequest, OperationRes
         await _productRepository.AddAsync(newProduct);
         await _productRepository.SaveChangesAsync();
 
-        return OperationResult.Success();
+        return OperationResult.Success(new IdResponse<int>() { Id = newProduct.Id });
 
     }
 }

@@ -29,7 +29,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductRequest, Operat
             return validationResult;
         var product = await _productRepository.GetByIdAsync(request.Id);
         if (product is null)
-            return OperationResult.Failure("Record not found");
+            return OperationResult.Failure("Record not found.");
 
         product.Update(request.Name, request.UnitPrice);
         await _productRepository.SaveChangesAsync();

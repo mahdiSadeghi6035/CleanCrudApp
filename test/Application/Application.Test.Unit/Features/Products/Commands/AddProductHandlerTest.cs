@@ -54,5 +54,6 @@ public class AddProductHandlerTest
         //assert
         result.IsSuccess.Should().BeTrue();
         result.Messages.Should().BeEmpty();
+        result.Data.Should().NotBeNull();
     }
 }

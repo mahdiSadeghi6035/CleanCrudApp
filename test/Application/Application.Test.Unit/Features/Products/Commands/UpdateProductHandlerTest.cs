@@ -58,7 +58,7 @@ public class UpdateProductHandlerTest
 
         //assert
         result.IsSuccess.Should().BeFalse();
-        result.Messages.Should().Contain("Record not found");
+        result.Messages.Should().Contain("Record not found.");
     }
     [Fact]
     public async Task Should_SuccessUpdateProduct()
