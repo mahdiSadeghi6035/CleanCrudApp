@@ -157,9 +157,12 @@ public class ProductsTest : IClassFixture<WebApplicationFactory<Program>>
 
         //act
         var apiResult = await _httpClient.GetAsync(_url);
+        var result = await apiResult.Content.ReadFromJsonAsync<OperationResult>();
 
         //arrange
-        apiResult.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        apiResult.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        result.IsSuccess.Should().BeFalse();
+        result.Messages.Should().Contain("Record not found.");
     }
     [Fact]
     public async Task Should_GetDetailsProduct()
@@ -170,11 +173,12 @@ public class ProductsTest : IClassFixture<WebApplicationFactory<Program>>
 
         //act
         var apiResult = await _httpClient.GetAsync(_url);
-        var result = await apiResult.Content.ReadFromJsonAsync<DetailsProductDto>();
+        var result = await apiResult.Content.ReadFromJsonAsync<OperationResult>();
+        var data = JsonConvert.DeserializeObject<DetailsProductDto>(result.Data.ToString());
 
         //arrange
         apiResult.StatusCode.Should().Be(HttpStatusCode.OK);
-        result.Id.Should().Be(productId.Id);
+        data.Id.Should().Be(productId.Id);
     }
     [Fact]
     public async Task Should_GetListProducts()

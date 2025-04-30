@@ -40,7 +40,7 @@ public class ProductsController : ControllerBase
     public async Task<IActionResult> GetDetails(int id)
     {
         var result = await _mediator.Send(new GetDetailsProductRequest() { Id = id });
-        return result is not null ? Ok(result) : NotFound();
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
     [HttpGet]
     public async Task<IActionResult> GetListAsync()

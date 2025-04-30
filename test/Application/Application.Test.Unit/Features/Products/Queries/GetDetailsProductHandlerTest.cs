@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Infrastructure.Repositories;
+using Application.DTo.Products;
 using Application.Features.Products.Queries;
 using Domain.Test.Unit.Entities.Products;
 using FluentAssertions;
@@ -23,14 +24,13 @@ public class GetDetailsProductHandlerTest
         //arrange
         GetDetailsProductRequest request = new GetDetailsProductRequest()
         {
-            Id = 0
+            Id = 1
         };
         //act
         var result = await _getDetailsProductHandler.Handle(request, new());
 
         //assert
-        _productRepository.Verify(p => p.GetByIdAsync(It.IsAny<int>()));
-
+        _productRepository.Verify(p => p.GetByIdAsync(It.Is<int>(p => p == request.Id)));
     }
     [Fact]
     public async Task Should_ReturnNullIfNotFoundRecord()
@@ -44,7 +44,8 @@ public class GetDetailsProductHandlerTest
         var result = await _getDetailsProductHandler.Handle(request, new());
 
         //assert
-        result.Should().BeNull();
+        result.IsSuccess.Should().BeFalse();
+        result.Messages.Should().Contain("Record not found.");
     }
     [Fact]
     public async Task Should_ReturnDetailsProduct()
@@ -60,10 +61,12 @@ public class GetDetailsProductHandlerTest
 
         //act
         var result = await _getDetailsProductHandler.Handle(request, new());
+        var data = result.Data as DetailsProductDto;
+
+
 
         //assert
-        result.Name.Should().Be(product.Name);
-        result.Id.Should().Be(product.Id);
-        result.UnitPrice.Should().Be(product.UnitPrice);
+        result.Data.Should().NotBeNull();
+        data.Should().BeEquivalentTo(product);
     }
 }
